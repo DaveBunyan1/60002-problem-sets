@@ -1,10 +1,10 @@
 ###########################
 # 6.0002 Problem Set 1a: Space Cows 
-# Name:
+# Name: David Bunyan
 # Collaborators:
-# Time:
+# Time: 2025-12-03 15:00
 
-from ps1_partition import get_partitions
+from problem_set_1.ps1_partition import get_partitions
 import time
 
 #================================
@@ -39,17 +39,22 @@ def load_cows(filename: str) -> dict:
                 parts = line.strip().split(',')
                 if len(parts) != 2:
                     print(f"Skipping malformed line: {line}")
+                    continue
 
                 name, weight = parts
-                name = name.strip()
-                weight = weight.strip()
 
+                name = name.strip()
+                if not name:
+                    print(f"Skipping line with empty name: {line}")
+                    continue
+
+                weight = weight.strip()
                 if not weight.isdigit():
                     print(f"Skipping line with non-integer weight: {line}")
                     continue
 
                 data[name] = int(weight)
-                
+
     except FileNotFoundError:
         print(f"Error: File '{filename}' not found.")
         return {}
