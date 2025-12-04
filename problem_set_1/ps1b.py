@@ -1,8 +1,8 @@
 ###########################
 # 6.0002 Problem Set 1b: Space Change
-# Name:
+# Name: Dave Bunyan
 # Collaborators:
-# Time:
+# Time: 2025-12-03 21:00
 # Author: charz, cdenise
 
 # ================================
