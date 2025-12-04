@@ -11,7 +11,7 @@
 
 
 # Problem 1
-def dp_make_weight(egg_weights, target_weight, memo={}):
+def dp_make_weight(egg_weights, target_weight, memo=None):
     """
     Find number of eggs to bring back, using the smallest number of eggs. Assumes there is
     an infinite supply of eggs of each weight, and there is always a egg of value 1.
@@ -23,8 +23,25 @@ def dp_make_weight(egg_weights, target_weight, memo={}):
 
     Returns: int, smallest number of eggs needed to make target weight
     """
-    # TODO: Your code here
-    pass
+
+    if memo is None:
+        memo = {}
+
+    if target_weight == 0:
+        return 0
+
+    if target_weight in memo:
+        return memo[target_weight]
+
+    min_eggs = float("inf")
+
+    for egg in egg_weights:
+        if egg <= target_weight:
+            num_eggs = 1 + dp_make_weight(egg_weights, target_weight - egg, memo)
+            min_eggs = min(min_eggs, num_eggs)
+
+    memo[target_weight] = min_eggs
+    return min_eggs
 
 
 # EXAMPLE TESTING CODE, feel free to add more if you'd like
