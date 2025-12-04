@@ -4,7 +4,8 @@
 # Collaborators:
 # Time: 2025-12-03 15:00
 
-from problem_set_1.ps1_partition import get_partitions
+# from problem_set_1.ps1_partition import get_partitions # For testing
+from ps1_partition import get_partitions
 import time
 from typing import Dict, List, Tuple
 
@@ -159,7 +160,7 @@ def brute_force_cow_transport(cows: Dict[str, int], limit: int = 10) -> List[Lis
 
 
 # Problem 4
-def compare_cow_transport_algorithms():
+def compare_cow_transport_algorithms() -> None:
     """
     Using the data from ps1_cow_data.txt and the specified weight limit, run your
     greedy_cow_transport and brute_force_cow_transport functions here. Use the
@@ -173,4 +174,32 @@ def compare_cow_transport_algorithms():
     Does not return anything.
     """
     # TODO: Your code here
-    pass
+    filename = "ps1_cow_data.txt"
+    cows = load_cows(filename)
+
+    print(cows)
+
+    limit = 10
+
+    print("Comparing Cow Transport Algorithms")
+    print("---------------------------------")
+
+    # --- Greedy Algorithm ---
+    start = time.time()
+    greedy_result = greedy_cow_transport(cows, limit)
+    greedy_time = time.time() - start
+
+    print(f"Greedy Algorithm: {len(greedy_result)} trips")
+    print(f"Greedy Time: {greedy_time:.6f} seconds\n")
+
+    # --- Brute Force Algorithm ---
+    start = time.time()
+    brute_result = brute_force_cow_transport(cows, limit)
+    brute_time = time.time() - start
+
+    print(f"Brute Force Algorithm: {len(brute_result)} trips")
+    print(f"Brute Force Time: {brute_time:.6f} seconds\n")
+
+
+if __name__ == "__main__":
+    compare_cow_transport_algorithms()
