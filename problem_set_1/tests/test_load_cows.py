@@ -2,6 +2,7 @@ import tempfile
 import os
 from problem_set_1.ps1a import load_cows
 
+
 def write_temp_file(contents):
     """Create a temporary file with given contents and return its filename."""
     tmp = tempfile.NamedTemporaryFile(delete=False, mode="w", encoding="utf-8")
@@ -20,6 +21,7 @@ def test_blank_file():
     filename = write_temp_file("")
     assert load_cows(filename) == {}
     os.remove(filename)
+
 
 def test_malformed_lines():
     contents = (

@@ -2,6 +2,7 @@ import pytest
 import copy
 from problem_set_1.ps1a import greedy_cow_transport
 
+
 def test_simple_case():
     cows = {
         "Betsy": 6,
@@ -25,11 +26,7 @@ def test_greedy_bad_input_type():
 
 
 def test_exact_fit():
-    cows = {
-        "A": 5,
-        "B": 5,
-        "C": 10
-    }
+    cows = {"A": 5, "B": 5, "C": 10}
     result = greedy_cow_transport(cows, limit=10)
 
     # C takes its own trip (10)
@@ -63,13 +60,8 @@ def test_one_cow_per_trip():
 
 
 def test_large_to_small_ordering():
-    cows = {
-        "Big": 8,
-        "Medium": 5,
-        "Small": 2
-    }
+    cows = {"Big": 8, "Medium": 5, "Small": 2}
     result = greedy_cow_transport(cows, limit=10)
-
 
     assert result == [["Big", "Small"], ["Medium"]]
 

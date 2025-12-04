@@ -1,6 +1,7 @@
 from problem_set_1.ps1a import load_cows
 
-def greedy_cow_transport(cows,limit=10):
+
+def greedy_cow_transport(cows, limit=10):
     """
     Uses a greedy heuristic to determine an allocation of cows that attempts to
     minimize the number of spaceship trips needed to transport all the cows. The
@@ -16,7 +17,7 @@ def greedy_cow_transport(cows,limit=10):
     Parameters:
     cows - a dictionary of name (string), weight (int) pairs
     limit - weight limit of the spaceship (an int)
-    
+
     Returns:
     A list of lists, with each inner list containing the names of cows
     transported on a particular trip and the overall list containing all the
@@ -28,9 +29,8 @@ def greedy_cow_transport(cows,limit=10):
 
     while remaining:
         trip = []
-        limit_left= limit
+        limit_left = limit
         new_remaining = []
-
 
         for name, weight in remaining:
             if weight <= limit_left:
@@ -45,9 +45,8 @@ def greedy_cow_transport(cows,limit=10):
     print(trips)
 
 
-
 if __name__ == "__main__":
     filename = "problem_set_1/ps1_cow_data.txt"
     cows = load_cows(filename)
-    
+
     greedy_cow_transport(cows)
