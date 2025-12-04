@@ -6,13 +6,14 @@
 
 from problem_set_1.ps1_partition import get_partitions
 import time
+from typing import Dict, List, Tuple
 
 #================================
 # Part A: Transporting Space Cows
 #================================
 
 # Problem 1
-def load_cows(filename: str) -> dict:
+def load_cows(filename: str) -> Dict[str, int]:
     """
     Read the contents of the given file.  Assumes the file contents contain
     data in the form of comma-separated cow name, weight pairs, and return a
@@ -25,7 +26,7 @@ def load_cows(filename: str) -> dict:
     a dictionary of cow name (string), weight (int) pairs
     """
     # TODO: Your code here
-    data: dict = {}
+    data: Dict[str, int] = {}
 
     try:
         with open(filename) as file:
@@ -62,7 +63,7 @@ def load_cows(filename: str) -> dict:
     return data
 
 # Problem 2
-def greedy_cow_transport(cows,limit=10):
+def greedy_cow_transport(cows: Dict[str, int],limit: int=10) -> List[List[str]]:
     """
     Uses a greedy heuristic to determine an allocation of cows that attempts to
     minimize the number of spaceship trips needed to transport all the cows. The
@@ -85,7 +86,30 @@ def greedy_cow_transport(cows,limit=10):
     trips
     """
     # TODO: Your code here
-    pass
+    if not isinstance(cows, dict):
+        raise TypeError("cows must be a dictionary.")
+    
+    remaining: List[Tuple[str, int]]= sorted(cows.items(), key=lambda item: item[1], reverse=True)
+
+    trips: List[List[str]] = []
+
+    while remaining:
+        trip: List[str] = []
+        limit_left: int = limit
+        new_remaining: List[List[str]] = []
+
+
+        for name, weight in remaining:
+            if weight <= limit_left:
+                trip.append(name)
+                limit_left -= weight
+            else:
+                new_remaining.append((name, weight))
+
+        trips.append(trip)
+        remaining = new_remaining
+
+    return(trips)
 
 # Problem 3
 def brute_force_cow_transport(cows,limit=10):

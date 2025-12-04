@@ -1,28 +1,53 @@
-# Problem 1
-def load_cows(filename):
+from problem_set_1.ps1a import load_cows
+
+def greedy_cow_transport(cows,limit=10):
     """
-    Read the contents of the given file.  Assumes the file contents contain
-    data in the form of comma-separated cow name, weight pairs, and return a
-    dictionary containing cow names as keys and corresponding weights as values.
+    Uses a greedy heuristic to determine an allocation of cows that attempts to
+    minimize the number of spaceship trips needed to transport all the cows. The
+    returned allocation of cows may or may not be optimal.
+    The greedy heuristic should follow the following method:
+
+    1. As long as the current trip can fit another cow, add the largest cow that will fit
+        to the trip
+    2. Once the trip is full, begin a new trip to transport the remaining cows
+
+    Does not mutate the given dictionary of cows.
 
     Parameters:
-    filename - the name of the data file as a string
-
+    cows - a dictionary of name (string), weight (int) pairs
+    limit - weight limit of the spaceship (an int)
+    
     Returns:
-    a dictionary of cow name (string), weight (int) pairs
+    A list of lists, with each inner list containing the names of cows
+    transported on a particular trip and the overall list containing all the
+    trips
     """
     # TODO: Your code here
-    data = {}
-    with open(filename) as f:
-        for line in f:
-            name, weight = line.strip().split(',')
-            data[name] = int(weight)
+    remaining = sorted(cows.items(), key=lambda item: item[1], reverse=True)
+    trips = []
 
-    print(data)
-    return
+    while remaining:
+        trip = []
+        limit_left= limit
+        new_remaining = []
+
+
+        for name, weight in remaining:
+            if weight <= limit_left:
+                trip.append(name)
+                limit_left -= weight
+            else:
+                new_remaining.append((name, weight))
+
+        trips.append(trip)
+        remaining = new_remaining
+
+    print(trips)
 
 
 
 if __name__ == "__main__":
     filename = "problem_set_1/ps1_cow_data.txt"
-    load_cows(filename)
+    cows = load_cows(filename)
+    
+    greedy_cow_transport(cows)
