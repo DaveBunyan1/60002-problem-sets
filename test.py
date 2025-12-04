@@ -1,16 +1,17 @@
 from problem_set_1.ps1a import load_cows
+from problem_set_1.ps1_partition import get_partitions
 
 
-def greedy_cow_transport(cows, limit=10):
+# Problem 3
+def brute_force_cow_transport(cows, limit=10):
     """
-    Uses a greedy heuristic to determine an allocation of cows that attempts to
-    minimize the number of spaceship trips needed to transport all the cows. The
-    returned allocation of cows may or may not be optimal.
-    The greedy heuristic should follow the following method:
+    Finds the allocation of cows that minimizes the number of spaceship trips
+    via brute force.  The brute force algorithm should follow the following method:
 
-    1. As long as the current trip can fit another cow, add the largest cow that will fit
-        to the trip
-    2. Once the trip is full, begin a new trip to transport the remaining cows
+    1. Enumerate all possible ways that the cows can be divided into separate trips
+        Use the given get_partitions function in ps1_partition.py to help you!
+    2. Select the allocation that minimizes the number of trips without making any trip
+        that does not obey the weight limitation
 
     Does not mutate the given dictionary of cows.
 
@@ -24,29 +25,30 @@ def greedy_cow_transport(cows, limit=10):
     trips
     """
     # TODO: Your code here
-    remaining = sorted(cows.items(), key=lambda item: item[1], reverse=True)
-    trips = []
+    if not isinstance(cows, dict):
+        raise TypeError("cows must be a dictionary.")
 
-    while remaining:
-        trip = []
-        limit_left = limit
-        new_remaining = []
+    best_partition = None
+    partitions = get_partitions(cows)
 
-        for name, weight in remaining:
-            if weight <= limit_left:
-                trip.append(name)
-                limit_left -= weight
-            else:
-                new_remaining.append((name, weight))
+    i = 0
+    for partition in partitions:
+        valid = True
+        for trip in partition:
+            weight = sum(cows[cow] for cow in trip)
+            if weight > limit:
+                valid = False
+                break
 
-        trips.append(trip)
-        remaining = new_remaining
+        if valid:
+            if best_partition is None or len(best_partition) > len(partition):
+                best_partition = partition
 
-    print(trips)
+    return best_partition if best_partition is not None else []
 
 
 if __name__ == "__main__":
     filename = "problem_set_1/ps1_cow_data.txt"
     cows = load_cows(filename)
 
-    greedy_cow_transport(cows)
+    brute_force_cow_transport(cows)

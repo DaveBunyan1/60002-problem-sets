@@ -116,7 +116,7 @@ def greedy_cow_transport(cows: Dict[str, int], limit: int = 10) -> List[List[str
 
 
 # Problem 3
-def brute_force_cow_transport(cows, limit=10):
+def brute_force_cow_transport(cows: Dict[str, int], limit: int = 10) -> List[List[str]]:
     """
     Finds the allocation of cows that minimizes the number of spaceship trips
     via brute force.  The brute force algorithm should follow the following method:
@@ -138,7 +138,24 @@ def brute_force_cow_transport(cows, limit=10):
     trips
     """
     # TODO: Your code here
-    pass
+    if not isinstance(cows, dict):
+        raise TypeError("cows must be a dictionary.")
+
+    best_partition: List[List[str]] | None = None
+
+    for partition in get_partitions(list(cows.keys())):
+        valid = True
+        for trip in partition:
+            weight = sum(cows[cow] for cow in trip)
+            if weight > limit:
+                valid = False
+                break
+
+        if valid:
+            if best_partition is None or len(best_partition) > len(partition):
+                best_partition = partition
+
+    return best_partition if best_partition is not None else []
 
 
 # Problem 4
