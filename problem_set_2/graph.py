@@ -100,7 +100,7 @@ class Digraph(object):
         """Adds a Node object to the Digraph. Raises a ValueError if it is
         already in the graph."""
         if node in self.nodes:
-            raise ValueError("Node not in graph")
+            raise ValueError("Node already in graph")
 
         self.nodes.add(node)
         self.edges[node] = []
