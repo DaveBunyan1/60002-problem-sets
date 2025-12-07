@@ -9,6 +9,7 @@
 #
 import unittest
 from graph import Digraph, Node, WeightedEdge
+from typing import List, Tuple
 
 #
 # Problem 2: Building up the Campus Map
@@ -64,7 +65,9 @@ def load_map(map_filename: str) -> Digraph:
                 mit_graph.add_node(src_node)
             if not mit_graph.has_node(dest_node):
                 mit_graph.add_node(dest_node)
-            edge = WeightedEdge(src_node, dest_node, total_distance, outdoor_distance)
+            edge = WeightedEdge(
+                src_node, dest_node, int(total_distance), int(outdoor_distance)
+            )
             mit_graph.add_edge(edge)
 
     return mit_graph
@@ -99,11 +102,21 @@ def load_map(map_filename: str) -> Digraph:
 # What is the objective function for this problem? What are the constraints?
 #
 # Answer:
-#
+# The objective function for this problem is to find the shortest distance between two
+# buildings subject to the following constraints:
+#   - Distance outside must not exceed maximum outdoors distance.
 
 
 # Problem 3b: Implement get_best_path
-def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist, best_path):
+def get_best_path(
+    digraph: Digraph,
+    start: str,
+    end: str,
+    path: List[List[str], int, int],
+    max_dist_outdoors: int,
+    best_dist: int,
+    best_path: List[str],
+) -> Tuple[List[str], int, int] | None:
     """
     Finds the shortest path between buildings subject to constraints.
 
@@ -137,7 +150,59 @@ def get_best_path(digraph, start, end, path, max_dist_outdoors, best_dist, best_
         max_dist_outdoors constraints, then return None.
     """
     # TODO
-    pass
+
+    src_node = None
+    dest_node = None
+
+    for node in digraph.nodes:
+        if node.get_name() == start:
+            src_node = node
+        if node.get_name() == end:
+            dest_node = node
+
+    total_outdoor_dist = path[2]
+
+    if not digraph.has_node(src_node) or not digraph.has_node(dest_node):
+        raise ValueError("Start or end node not in graph.")
+
+    if len(path[0]) == 0:
+        path = [[start], 0, 0]
+
+    if start == end:
+        return path
+
+    for edge in digraph.get_edges_for_node(src_node):
+        next_node = edge.get_destination().get_name()
+
+        if next_node in path[0]:
+            continue
+
+        new_total = path[1] + edge.get_total_distance()
+        new_outdoor = path[2] + edge.get_outdoor_distance()
+
+        if (new_outdoor > max_dist_outdoors) or (
+            best_dist is not None and new_total >= best_dist
+        ):
+            continue
+
+        new_path = [path[0] + [next_node], new_total, new_outdoor]
+
+        result = get_best_path(
+            digraph, next_node, end, new_path, max_dist_outdoors, best_dist, best_path
+        )
+
+        if result is not None:
+            result_path, result_total, total_outdoor_dist = (
+                result[0],
+                result[1],
+                result[2],
+            )
+
+            if best_dist is None or result_total < best_dist:
+                best_dist = result_total
+                best_path = result_path
+
+    return [best_path, best_dist, total_outdoor_dist]
 
 
 # Problem 3c: Implement directed_dfs
@@ -170,7 +235,19 @@ def directed_dfs(digraph, start, end, max_total_dist, max_dist_outdoors):
         max_dist_outdoors constraints, then raises a ValueError.
     """
     # TODO
-    pass
+    path = [[], 0, 0]
+    result = get_best_path(
+        digraph, start, end, path, max_dist_outdoors, best_dist=None, best_path=None
+    )
+    if result[1] is None:
+        print("There is no result that meets constraints!")
+        raise ValueError
+    else:
+        if result[1] > max_total_dist:
+            print("Result exceeded max_total_dist")
+            raise ValueError
+        else:
+            return result[0]
 
 
 # ================================================================
